@@ -33,6 +33,7 @@ interface Props {
     date: dayjs.Dayjs;
     minDate?: DateType | null;
     maxDate?: DateType | null;
+    showToolbars?: boolean | null;
     onClickPrevious: () => void;
     onClickNext: () => void;
     changeMonth: (month: number) => void;
@@ -43,6 +44,7 @@ const Calendar: React.FC<Props> = ({
     date,
     minDate,
     maxDate,
+    showToolbars = true,
     onClickPrevious,
     onClickNext,
     changeMonth,
@@ -243,73 +245,75 @@ const Calendar: React.FC<Props> = ({
 
     return (
         <div className="w-full md:w-[296px] md:min-w-[296px]">
-            <div className="flex items-center space-x-1.5 border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5">
-                {!showMonths && !showYears && (
-                    <div className="flex-none">
-                        <RoundedButton roundedFull={true} onClick={onClickPrevious}>
-                            <ChevronLeftIcon className="h-5 w-5" />
-                        </RoundedButton>
-                    </div>
-                )}
+            {showToolbars && (
+                <div className="flex items-center space-x-1.5 border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5">
+                    {!showMonths && !showYears && (
+                        <div className="flex-none">
+                            <RoundedButton roundedFull={true} onClick={onClickPrevious}>
+                                <ChevronLeftIcon className="h-5 w-5" />
+                            </RoundedButton>
+                        </div>
+                    )}
 
-                {showYears && (
-                    <div className="flex-none">
-                        <RoundedButton
-                            roundedFull={true}
-                            onClick={() => {
-                                setYear(year - 12);
-                            }}
-                        >
-                            <DoubleChevronLeftIcon className="h-5 w-5" />
-                        </RoundedButton>
-                    </div>
-                )}
+                    {showYears && (
+                        <div className="flex-none">
+                            <RoundedButton
+                                roundedFull={true}
+                                onClick={() => {
+                                    setYear(year - 12);
+                                }}
+                            >
+                                <DoubleChevronLeftIcon className="h-5 w-5" />
+                            </RoundedButton>
+                        </div>
+                    )}
 
-                <div className="flex flex-1 items-center space-x-1.5">
-                    <div className="w-1/2">
-                        <RoundedButton
-                            onClick={() => {
-                                setShowMonths(!showMonths);
-                                hideYears();
-                            }}
-                        >
-                            <>{calendarData.date.locale(i18n).format("MMM")}</>
-                        </RoundedButton>
+                    <div className="flex flex-1 items-center space-x-1.5">
+                        <div className="w-1/2">
+                            <RoundedButton
+                                onClick={() => {
+                                    setShowMonths(!showMonths);
+                                    hideYears();
+                                }}
+                            >
+                                <>{calendarData.date.locale(i18n).format("MMM")}</>
+                            </RoundedButton>
+                        </div>
+
+                        <div className="w-1/2">
+                            <RoundedButton
+                                onClick={() => {
+                                    setShowYears(!showYears);
+                                    hideMonths();
+                                }}
+                            >
+                                <>{calendarData.date.year()}</>
+                            </RoundedButton>
+                        </div>
                     </div>
 
-                    <div className="w-1/2">
-                        <RoundedButton
-                            onClick={() => {
-                                setShowYears(!showYears);
-                                hideMonths();
-                            }}
-                        >
-                            <>{calendarData.date.year()}</>
-                        </RoundedButton>
-                    </div>
+                    {showYears && (
+                        <div className="flex-none">
+                            <RoundedButton
+                                roundedFull={true}
+                                onClick={() => {
+                                    setYear(year + 12);
+                                }}
+                            >
+                                <DoubleChevronRightIcon className="h-5 w-5" />
+                            </RoundedButton>
+                        </div>
+                    )}
+
+                    {!showMonths && !showYears && (
+                        <div className="flex-none">
+                            <RoundedButton roundedFull={true} onClick={onClickNext}>
+                                <ChevronRightIcon className="h-5 w-5" />
+                            </RoundedButton>
+                        </div>
+                    )}
                 </div>
-
-                {showYears && (
-                    <div className="flex-none">
-                        <RoundedButton
-                            roundedFull={true}
-                            onClick={() => {
-                                setYear(year + 12);
-                            }}
-                        >
-                            <DoubleChevronRightIcon className="h-5 w-5" />
-                        </RoundedButton>
-                    </div>
-                )}
-
-                {!showMonths && !showYears && (
-                    <div className="flex-none">
-                        <RoundedButton roundedFull={true} onClick={onClickNext}>
-                            <ChevronRightIcon className="h-5 w-5" />
-                        </RoundedButton>
-                    </div>
-                )}
-            </div>
+            )}
 
             <div className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]">
                 {showMonths && (
